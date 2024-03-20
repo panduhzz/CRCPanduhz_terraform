@@ -29,6 +29,7 @@ resource "azurerm_storage_account" "front_end" {
   allow_nested_items_to_be_public = true
 
   #Defines that the storage account will be a static website which automatically creates a '$web' blob
+  #Have to manually set the $web container to the correct access type.
   static_website {
     index_document     = "index.html"
     error_404_document = "error.html"
@@ -42,6 +43,7 @@ resource "azurerm_storage_container" "webcontainer" {
 }
 */
 resource "azurerm_storage_blob" "index_html" {
+  depends_on = [ azurerm_storage_account.front_end ]
   name                   = "index.html"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -52,6 +54,7 @@ resource "azurerm_storage_blob" "index_html" {
 }
 
 resource "azurerm_storage_blob" "syle_css" {
+  depends_on = [ azurerm_storage_account.front_end ]
   name                   = "style.css"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -62,6 +65,7 @@ resource "azurerm_storage_blob" "syle_css" {
 }
 
 resource "azurerm_storage_blob" "error_html" {
+  depends_on = [ azurerm_storage_account.front_end ]
   name                   = "error.html"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -72,6 +76,7 @@ resource "azurerm_storage_blob" "error_html" {
 }
 
 resource "azurerm_storage_blob" "script_js" {
+  depends_on = [ azurerm_storage_account.front_end ]
   name                   = "script.js"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web"
@@ -118,16 +123,26 @@ resource "azurerm_cdn_endpoint" "example" {
   is_https_allowed    = true
   origin {
     name      = "default-origin"
-    host_name = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
-    origin_host_header = 
+    host_name = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"    
+  }
+  origin_host_header = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
 
+}
+
+#explicitly creating a delay for DNS propagation
+resource "null_resource" "dns_delay" {
+  depends_on = [azurerm_dns_cname_record.azure_resource]
+
+  provisioner "local-exec" {
+    command = "sleep 600" # Waits for 10 minutes
   }
 }
+
 resource "azurerm_cdn_endpoint_custom_domain" "example" {
-  depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.azure_resource, azurerm_dns_zone.panduhz_dns_zone]
+  depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.azure_resource, null_resource.dns_delay,azurerm_dns_zone.panduhz_dns_zone]
   name            = "panduhzco-domain"
   cdn_endpoint_id = azurerm_cdn_endpoint.example.id
-  host_name       = "www.${azurerm_dns_zone.panduhz_dns_zone.name}"
+  host_name       = "www.panduhzco.com"
 
   cdn_managed_https {
     certificate_type = "Dedicated"
