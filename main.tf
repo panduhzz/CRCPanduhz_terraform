@@ -34,17 +34,19 @@ resource "azurerm_storage_account" "front_end" {
     error_404_document = "error.html"
   }
 }
+/*
 resource "azurerm_storage_container" "webcontainer" {
   name                  = "$web"
   storage_account_name  = azurerm_storage_account.front_end.name
   container_access_type = "container"
 }
+*/
 resource "azurerm_storage_blob" "index_html" {
   name                   = "index.html"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "/Users/christopherchan/CloudResumeChallenge/index.html"
+  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\index.html"
   content_type           = "text/html"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -54,7 +56,7 @@ resource "azurerm_storage_blob" "syle_css" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "/Users/christopherchan/CloudResumeChallenge/style.css"
+  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\style.css"
   content_type           = "style/css"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -64,7 +66,7 @@ resource "azurerm_storage_blob" "error_html" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "/Users/christopherchan/CloudResumeChallenge/error.html"
+  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\error.html"
   content_type           = "text/html"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -74,21 +76,22 @@ resource "azurerm_storage_blob" "script_js" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web"
   type                   = "Block"
-  source                 = "/Users/christopherchan/CloudResumeChallenge/script.js"
+  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\script.js"
   content_type           = "application/javascript"
 }
 
 #CDN and DNS Configuration
 resource "azurerm_dns_zone" "panduhz_dns_zone" {
-  name                = "panduhz.com"
+  name                = "panduhzco.com"
   resource_group_name = azurerm_resource_group.web_rg.name
 }
+
 #configuring CNAME for dns zone
 resource "azurerm_dns_cname_record" "azure_resource" {
   name                = "cdnverify.www"
   zone_name           = azurerm_dns_zone.panduhz_dns_zone.name
   resource_group_name = azurerm_resource_group.web_rg.name
-  ttl                 = 300
+  ttl                 = 3600
   record              = "cdnverify.${azurerm_cdn_endpoint.example.name}.azureedge.net"
 }
 #alias reference CNAME
@@ -97,14 +100,14 @@ resource "azurerm_dns_cname_record" "target" {
   name                = "www"
   zone_name           = azurerm_dns_zone.panduhz_dns_zone.name
   resource_group_name = azurerm_resource_group.web_rg.name
-  ttl                 = 300
-  target_resource_id =  azurerm_cdn_endpoint.example.id
+  ttl                 = 3600
+  target_resource_id  = azurerm_cdn_endpoint.example.id
 }
 resource "azurerm_cdn_profile" "panduhzprofile" {
   name                = "panduhz-cdn"
   location            = "global"
   resource_group_name = azurerm_resource_group.web_rg.name
-  sku                 = "Standard_Verizon"
+  sku                 = "Standard_Microsoft"
 }
 resource "azurerm_cdn_endpoint" "example" {
   name                = "panduhz-tftest"
@@ -116,19 +119,19 @@ resource "azurerm_cdn_endpoint" "example" {
   origin {
     name      = "default-origin"
     host_name = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
+    origin_host_header = 
+
   }
 }
+resource "azurerm_cdn_endpoint_custom_domain" "example" {
+  depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.azure_resource, azurerm_dns_zone.panduhz_dns_zone]
+  name            = "panduhzco-domain"
+  cdn_endpoint_id = azurerm_cdn_endpoint.example.id
+  host_name       = "www.${azurerm_dns_zone.panduhz_dns_zone.name}"
 
-/*
-resource "azurerm_cdn_frontdoor_custom_domain" "fd_custom" {
-  name                     = "customdomain-frontdoor"
-  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.panduhz_door.id
-  dns_zone_id              = azurerm_dns_zone.panduhz_dns_zone.id
-  host_name                = "panduhz.com"
-
-  tls {
-    certificate_type    = "ManagedCertificate"
-    minimum_tls_version = "TLS12"
+  cdn_managed_https {
+    certificate_type = "Dedicated"
+    protocol_type    = "ServerNameIndication"
+    tls_version      = "TLS12"
   }
 }
-*/
