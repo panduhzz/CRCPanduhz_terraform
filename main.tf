@@ -48,7 +48,7 @@ resource "azurerm_storage_blob" "index_html" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\index.html"
+  source                 = "./web/index.html"
   content_type           = "text/html"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -59,7 +59,7 @@ resource "azurerm_storage_blob" "syle_css" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\style.css"
+  source                 = "./web/style.css"
   content_type           = "style/css"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -70,7 +70,7 @@ resource "azurerm_storage_blob" "error_html" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
   type                   = "Block"
-  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\error.html"
+  source                 = "./web/error.html"
   content_type           = "text/html"
   # Other configurations like content_type may be necessary depending on your files
 }
@@ -81,7 +81,7 @@ resource "azurerm_storage_blob" "script_js" {
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web"
   type                   = "Block"
-  source                 = "C:\\Users\\ChrisChan\\OneDrive - Alkeme Insurance Services\\Desktop\\FrontEnd\\script.js"
+  source                 = "./web/script.js"
   content_type           = "application/javascript"
 }
 
