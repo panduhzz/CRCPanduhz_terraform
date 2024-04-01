@@ -5,8 +5,10 @@ on:
     branches:
       - main
     paths:
-        - 'web'
-
+      - 'web/index.html'
+      - 'web/style.css'
+      - 'web/error.html'
+      - 'web/script.js'
 env:
   TF_CLOUD_ORGANIZATION: "panduhz"
   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
