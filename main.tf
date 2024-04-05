@@ -13,6 +13,9 @@ terraform {
 provider "azurerm" {
   features {}
 }
+provider "null" {
+  # Configuration options
+}
 
 resource "azurerm_resource_group" "web_rg" {
   name     = "panduhz_front_end_rg"
@@ -43,7 +46,7 @@ resource "azurerm_storage_container" "webcontainer" {
 }
 */
 resource "azurerm_storage_blob" "index_html" {
-  depends_on = [ azurerm_storage_account.front_end ]
+  depends_on             = [azurerm_storage_account.front_end]
   name                   = "index.html"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -54,7 +57,7 @@ resource "azurerm_storage_blob" "index_html" {
 }
 
 resource "azurerm_storage_blob" "syle_css" {
-  depends_on = [ azurerm_storage_account.front_end ]
+  depends_on             = [azurerm_storage_account.front_end]
   name                   = "style.css"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -65,7 +68,7 @@ resource "azurerm_storage_blob" "syle_css" {
 }
 
 resource "azurerm_storage_blob" "error_html" {
-  depends_on = [ azurerm_storage_account.front_end ]
+  depends_on             = [azurerm_storage_account.front_end]
   name                   = "error.html"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web" # Use the $web container for static website files
@@ -76,7 +79,7 @@ resource "azurerm_storage_blob" "error_html" {
 }
 
 resource "azurerm_storage_blob" "script_js" {
-  depends_on = [ azurerm_storage_account.front_end ]
+  depends_on             = [azurerm_storage_account.front_end]
   name                   = "script.js"
   storage_account_name   = azurerm_storage_account.front_end.name
   storage_container_name = "$web"
@@ -123,7 +126,7 @@ resource "azurerm_cdn_endpoint" "example" {
   is_https_allowed    = true
   origin {
     name      = "default-origin"
-    host_name = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"    
+    host_name = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
   }
   origin_host_header = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
 
@@ -139,7 +142,7 @@ resource "null_resource" "dns_delay" {
 }
 
 resource "azurerm_cdn_endpoint_custom_domain" "example" {
-  depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.azure_resource, null_resource.dns_delay,azurerm_dns_zone.panduhz_dns_zone]
+  depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.target, azurerm_dns_cname_record.azure_resource, null_resource.dns_delay, azurerm_dns_zone.panduhz_dns_zone]
   name            = "panduhzco-domain"
   cdn_endpoint_id = azurerm_cdn_endpoint.example.id
   host_name       = "www.panduhzco.com"
