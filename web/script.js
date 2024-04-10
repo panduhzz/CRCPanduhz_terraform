@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('https://backend-function-app.azurewebsites.net/api/http_trigger?code=MfR4DU6mC9_zdj8BwQWffIOX0I__n6_u1-GtJYAyG5aMAzFulXsLZw==')
+    fetch('https://backend-function-app.azurewebsites.net/api/http_trigger?code=qdX66yWpXc1dpqLybHgjJVOuk1aE9I-c0Eeoum2jwQETAzFuSEky_w==')
   .then(response => {
     if (!response.ok) {
         throw new Error('Network response was not ok');
