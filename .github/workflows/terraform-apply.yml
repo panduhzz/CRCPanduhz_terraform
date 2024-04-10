@@ -48,6 +48,7 @@ jobs:
           run: ${{ steps.apply-run.outputs.run_id }}
           comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"      
   blob_storage:
+        needs: terraform
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
