@@ -61,7 +61,7 @@ jobs:
               uses: azure/CLI@v1
               with:
                 inlineScript: |
-                    az storage container set-permission --name '$web' --account-name "panduhzstorage" --public-access "container"
+                    az storage container set-permission --name '$web' --account-name "panduhzstorage" --auth-mode key --public-access "container"
             - name: Purge CDN endpoint
               uses: azure/CLI@v1
               with:
