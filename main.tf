@@ -131,7 +131,7 @@ resource "azurerm_cdn_endpoint" "example" {
   origin_host_header = "${azurerm_storage_account.front_end.name}.blob.core.windows.net"
 
 }
-
+#test
 #explicitly creating a delay for DNS propagation
 resource "null_resource" "dns_delay" {
   depends_on = [azurerm_dns_cname_record.azure_resource]
