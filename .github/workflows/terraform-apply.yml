@@ -61,12 +61,17 @@ jobs:
               with:
                 inlineScript: |
                     az storage blob upload-batch --account-name panduhzstorage --auth-mode key -d '$web' -s ./web --overwrite
+            - name: Set Blob permission
+              uses: azure/CLI@v1
+              with:
+                inlineScript: |
+                    az storage container set-permission --name "$web" --public-access "container"
             - name: Purge CDN endpoint
               uses: azure/CLI@v1
               with:
                 inlineScript: |
                    az cdn endpoint purge --content-paths  "/*" --profile-name "panduhz-cdn" --name "panduhz-tftest" --resource-group "panduhz_front_end_rg"
-        
+            
           # Azure logout
             - name: logout
               run: |
