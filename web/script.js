@@ -17,7 +17,7 @@ fetch("https://backend-function-app.azurewebsites.net/api/updateDB?", {
 .then(data => {
   console.log(data);
   console.log("message: " + data.message);
-  console.log("Updated count: " + data.updateCount);
+  console.log("Updated count: " + data.updatedCount);
 })
 .catch(error => {
   console.error('There has been a problem with your fetch operation:', error);
