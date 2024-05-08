@@ -1,5 +1,5 @@
 //POST request
-fetch("https://backend-function-app.azurewebsites.net/api/updateDB?", {
+fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/updateDB?", {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ fetch("https://backend-function-app.azurewebsites.net/api/updateDB?", {
 
 //GET request
 document.addEventListener('DOMContentLoaded', function() {
-fetch("https://backend-function-app.azurewebsites.net/api/readDB?")
+fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/readDB?")
   .then(response => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
