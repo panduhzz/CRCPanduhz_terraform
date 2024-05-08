@@ -28,24 +28,24 @@ fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/updateDB?", {
 
 //GET request
 document.addEventListener('DOMContentLoaded', function() {
-fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/readDB?")
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.json();
-  })
-  .then(data => {
-    console.log(data);
-    console.log("message" + data.message);
-    console.log("count" + data.count);
-    document.querySelector('.visitor-counter').textContent = `Visitor Count: ${data.count}`;
-  })
-  .catch(error => {
-    console.error('There has been a problem with your fetch operation:', error);
-  })
-  .finally(() => {
-    console.log("DB read");
+  fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/readDB?")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      console.log("message" + data.message);
+      console.log("count" + data.count);
+      document.querySelector('.visitor-counter').textContent = `Visitor Count: ${data.count}`;
+    })
+    .catch(error => {
+      console.error('There has been a problem with your fetch operation:', error);
+    })
+    .finally(() => {
+      console.log("DB read");
   });
 })
 
