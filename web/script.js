@@ -18,16 +18,7 @@ fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/updateDB?", {
   console.log(data);
   console.log("message: " + data.message);
   console.log("Updated count: " + data.updatedCount);
-})
-.catch(error => {
-  console.error('There has been a problem with your fetch operation:', error);
-})
-.finally(() => {
-  console.log("Entity has been updated");
-});
 
-//GET request
-document.addEventListener('DOMContentLoaded', function() {
   fetch("https://panduhz-backend-app-prod.azurewebsites.net/api/readDB?")
     .then(response => {
       if (!response.ok) {
@@ -47,7 +38,19 @@ document.addEventListener('DOMContentLoaded', function() {
     .finally(() => {
       console.log("DB read");
   });
+
 })
+.catch(error => {
+  console.error('There has been a problem with your fetch operation:', error);
+})
+.finally(() => {
+  console.log("Entity has been updated");
+});
+
+//GET request
+
+  
+
 
 /*
 document.addEventListener('DOMContentLoaded', function() {
