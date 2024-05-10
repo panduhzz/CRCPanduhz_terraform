@@ -90,7 +90,7 @@ resource "azurerm_storage_blob" "script_js" {
 
 #CDN and DNS Configuration
 resource "azurerm_dns_zone" "panduhz_dns_zone" {
-  name                = "panduhzco.com"
+  name                = "panduhz.com"
   resource_group_name = azurerm_resource_group.web_rg.name
 }
 
@@ -143,9 +143,9 @@ resource "null_resource" "dns_delay" {
 
 resource "azurerm_cdn_endpoint_custom_domain" "example" {
   depends_on      = [azurerm_cdn_endpoint.example, azurerm_dns_cname_record.target, azurerm_dns_cname_record.azure_resource, null_resource.dns_delay, azurerm_dns_zone.panduhz_dns_zone]
-  name            = "panduhzco-domain"
+  name            = "panduhz-domain"
   cdn_endpoint_id = azurerm_cdn_endpoint.example.id
-  host_name       = "www.panduhzco.com"
+  host_name       = "www.panduhz.com"
 
   cdn_managed_https {
     certificate_type = "Dedicated"
